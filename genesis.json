@@ -1,0 +1,20 @@
+{
+    "alloc": {},
+    "config": {
+        "chainId": 2020,
+        "homesteadBlock": 0,
+        "DAOForkBlock": 0,
+        "DAOForkSupport": true,
+        "eip150Block": 0,
+        "eip155Block": 0,
+        "eip158Block": 0
+    },
+    "difficulty": "0x400",
+    "gasLimit": "0x989680",
+    "nonce": "0x0000000000000042",
+    "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "coinbase": "0x0000000000000000000000000000000000000000",
+    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "extraData": "",
+    "timestamp": "0x00"
+}
