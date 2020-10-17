@@ -1,0 +1,19 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "Backend service for decentralised KYC app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Ashlesh Sortee",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "eth-sig-util": "^2.5.3",
+    "ethereumjs-util": "^7.0.5",
+    "express-jwt": "^6.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "lru-cache": "^6.0.0"
+  }
+}
