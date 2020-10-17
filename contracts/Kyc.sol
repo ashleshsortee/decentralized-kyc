@@ -533,7 +533,7 @@ contract Kyc {
         bytes32 bankName,
         address bankAddress,
         bytes32 regNumber
-    ) public returns (bool) {
+    ) public isAdmin returns (bool) {
         require(
             banks[bankAddress].bank != bankAddress,
             "Bank with same address already exists"
