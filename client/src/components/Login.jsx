@@ -84,6 +84,7 @@ class Login extends Component {
         renderNotification('success', 'Login Successful', 'MetaMask login successful');
         this.props.history.push('/bank');
         this.setState({ loading: true });
+        window.location.reload();
       }
     } catch (err) {
       console.log('console err',);

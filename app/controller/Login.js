@@ -62,12 +62,13 @@ class Login {
       const userToken = await jsonwebtoken.sign({
         payload: {
           publicAddress,
+          role: publicAddress === adminAddress.toLowerCase() ? 'admin' : 'bank'
         },
       }, jwtSecret, {});
 
       res.cookie('userToken', userToken, { maxAge: 36000000 }); // 10 hrs
 
-      return res.status(200).json({ userToken, role: publicAddress === adminAddress ? 'admin' : 'bank' });
+      return res.status(200).json({ userToken });
     } catch (error) {
       return res.status(500).json({ error });
     }

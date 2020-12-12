@@ -3,8 +3,8 @@ import { Route, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import renderNotification from '../utils/notification-handler';
 
-const getSession = () => {
-  const jwt = Cookies.get('userToken')
+export const getSession = () => {
+  const jwt = Cookies.get('userToken');
   let session;
   try {
     if (jwt) {
@@ -16,7 +16,7 @@ const getSession = () => {
     console.log('Error while fetching session details', error);
   }
 
-  return session
+  return session;
 }
 
 export const logOut = () => {
@@ -24,21 +24,20 @@ export const logOut = () => {
   renderNotification('default', 'Info', 'Logged out!');
 }
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={props => {
+const PrivateRoute = ({ component: Component, roles, ...rest }) => (
+  <Route {...rest} render={props => {
+    const currentUserSession = getSession();
+    if (!currentUserSession) {
+      return <Redirect to={{ pathname: '/login' }} />
+    }
+    const { payload: { role: currentUserRole } } = currentUserSession;
 
-      return getSession() ? (
-        <Component {...props} />
-      ) : (
-          <Redirect
-            to="/login"
-          />
-        )
+    if (roles && roles.indexOf(currentUserRole) === -1) {
+      return <Redirect to={{ pathname: '/customer' }} />
     }
-    }
-  />
+
+    return <Component {...props} />
+  }} />
 );
 
 export default PrivateRoute;
