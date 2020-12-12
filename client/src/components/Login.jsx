@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import renderNotification from '../utils/notification-handler';
 
 const Web3 = require('web3');
 let web3;
@@ -18,7 +19,10 @@ class Login extends Component {
         window.web3.fromUtf8(`I am signing my one-time nonce: ${nonce}`),
         publicAddress,
         (err, signature) => {
-          if (err) return reject(err);
+          if (err) {
+            renderNotification('danger', 'Error', 'Failed to sign one-time nonce');
+            return reject(err);
+          }
           return resolve({ publicAddress, signature });
         }
       )
@@ -38,54 +42,51 @@ class Login extends Component {
   handleLogin = async () => {
     // Check if MetaMask is installed
     if (!window.ethereum) {
-      window.alert('Please install MetaMask first.');
+      renderNotification('warning', 'Alert', 'Please install MetaMask first.');
       return;
     }
 
     if (!web3) {
       try {
-        // Request account access if needed
+        // Request account access if required
         await window.ethereum.enable();
         web3 = new Web3(window.ethereum);
       } catch (error) {
-        window.alert('You need to allow MetaMask.');
+        renderNotification('warning', 'Alert', 'You need to allow MetaMask.');
         return;
       }
     }
 
     const publicAddress = await web3.eth.getCoinbase();
     if (!publicAddress) {
-      window.alert('Please activate MetaMask first.');
+      renderNotification('warning', 'Alert', 'Please activate MetaMask first.');
       return;
     }
-    console.log('console public address', publicAddress);
 
     try {
       const response = await fetch(`/generate-nonce?publicAddress=${publicAddress}`);
+
+      if (response.status !== 200) {
+        const { message } = await response.json();
+        renderNotification('danger', 'Login Failed', message);
+        throw Error(message);
+      }
+
       const { nonce } = await response.json();
-      console.log('nonce', nonce);
       const { signature } = await this.handleSignMessage(publicAddress, nonce);
-      console.log('console handle signature', signature);
-
       const result = await this.handleAuthenticate(publicAddress, signature);
-      console.log('console result', result);
       const { status, role } = result;
-      const userToken = await result.json();
-
-      console.log('console auth', userToken, status);
 
       if (status !== 200) {
-        throw Error('MetaMask login failed');
+        renderNotification('danger', 'Login Failed', 'MetaMask login failed.');
+        throw Error({ message: 'MetaMask login failed' });
       } else {
+        renderNotification('success', 'Login Successful', 'MetaMask login successful');
+        this.props.history.push('/bank');
         this.setState({ loading: true });
       }
     } catch (err) {
-      console.log('console err', err);
-
-    }
-
-    if (this.state.loading) {
-      this.props.history.push('/bank');
+      console.log('console err',);
     }
   }
 

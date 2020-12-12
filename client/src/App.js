@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import Login from './Login';
-import Bank from './Bank';
+import { BrowserRouter as Router, Route, Link, Switch, Redirect } from 'react-router-dom';
+import ReactNotification from 'react-notifications-component'
+import Login from './components/Login';
+import Admin from './components/Admin';
+import Customer from './components/Customer';
+import Bank from './components/Bank';
+import PrivateRoute, { logOut } from './components/private-route';
 
 class KYC extends Component {
 
@@ -11,10 +15,16 @@ class KYC extends Component {
     };
   }
 
+  handleLogout = () => {
+    logOut();
+    window.location.reload();
+  }
+
   render() {
     return (
       <Router>
         <div>
+          <ReactNotification />
           <nav>
             <ul>
               <li>
@@ -24,19 +34,27 @@ class KYC extends Component {
                 <Link to="/login">Login</Link>
               </li>
               <li>
-                <Link to="/Admin">Admin</Link>
+                <Link to="/admin">Admin</Link>
               </li>
               <li>
-                <Link to="/Bank">Bank</Link>
+                <Link to="/bank">Bank</Link>
+              </li>
+              <li>
+                <Link to="/customer">Customer</Link>
+              </li>
+              <li>
+                <div>
+                  <input type="button" value='Logout' onClick={this.handleLogout} /><br />
+                </div>
               </li>
             </ul>
           </nav>
 
           <Switch>
             <Route path="/login" component={Login} />
-            <Route path="/bank">
-              <Bank />
-            </Route>
+            <PrivateRoute path="/admin" component={Admin} />
+            <PrivateRoute path="/bank" component={Bank} />
+            <PrivateRoute path="/customer" component={Customer} />
           </Switch>
         </div>
       </Router >
