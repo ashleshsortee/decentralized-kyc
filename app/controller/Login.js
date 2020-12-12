@@ -5,7 +5,7 @@ const { recoverPersonalSignature } = require('eth-sig-util');
 const { bufferToHex } = require('ethereumjs-util');
 const jsonwebtoken = require('jsonwebtoken');
 const Provider = require('../proxies/Provider');
-const { adminAddress, jwtSecret } = require('../constant');
+const { adminAddress, jwtSecret, userList } = require('../constant');
 
 const provider = new Provider();
 const web3 = provider.web3;
@@ -23,7 +23,7 @@ class Login {
       const accounts = await web3.eth.getAccounts();
 
       if (!accounts.includes(web3.utils.toChecksumAddress(publicAddress))) {
-        throw Error('Account not registered');
+        return res.status(401).send({ message: 'Account not registered' });
       }
 
       // Generate nonce
@@ -49,7 +49,7 @@ class Login {
         sig: signature,
       });
 
-      if (address.toLowerCase() !== publicAddress.toLowerCase()) {
+      if (address.toLowerCase() !== publicAddress.toLowerCase() && !userList.includes(publicAddress)) {
         res.status(401).send({ error: 'Signature verification failed' });
         return null;
       }
@@ -65,7 +65,7 @@ class Login {
         },
       }, jwtSecret, {});
 
-      res.cookie('userToken', userToken, { httpOnly: true });
+      res.cookie('userToken', userToken, { maxAge: 36000000 }); // 10 hrs
 
       return res.status(200).json({ userToken, role: publicAddress === adminAddress ? 'admin' : 'bank' });
     } catch (error) {
