@@ -1,7 +1,7 @@
 pragma solidity ^0.6.9;
 
 contract Kyc {
-    // Customer Struct. It defines a customer and validating bank details
+    // Customer Struct. It defines a customer and validating bank's details
     struct Customer {
         bytes32 userName;
         bytes32 dataHash;
@@ -31,6 +31,7 @@ contract Kyc {
     mapping(bytes32 => Customer) public customers;
     mapping(address => Bank) public banks;
     mapping(bytes32 => KycRequest) public kycRequests;
+    mapping(bytes32 => KycRequest) public customerKycReq;
 
     // Mappings to maintain banks to banks and customer votes respectively
     mapping(address => bytes32[]) internal bankToCustomerVotes;
@@ -43,6 +44,8 @@ contract Kyc {
     address[] public bankList;
     bytes32[] public finalCustomers;
     bytes32[] internal customerReqDataList;
+    bytes32[] public customerReqList;
+    bytes32[] public customerVerificationList;
 
     // State variables to define admin address and minimum acceptable rating for banks and customers
     address admin;
@@ -80,10 +83,10 @@ contract Kyc {
 
     // Authenticates the password
     modifier validatePassword(bytes32 customerName, bytes32 password) {
-        if (
-            passwordList[customerName] != "0" &&
-            passwordList[customerName] != password
-        ) require(false, "Authentication failed!");
+        require(
+            passwordList[customerName] != password,
+            "Authentication failed!"
+        );
         _;
     }
 
@@ -120,8 +123,13 @@ contract Kyc {
 
         // Push customer request data to customerReqDataList array
         customerReqDataList.push(customerDataHash);
+        customerReqList.push(customerName);
 
         banks[msg.sender].kycCount += 1;
+
+        customerKycReq[customerName].userName = customerName;
+        customerKycReq[customerName].dataHash = customerDataHash;
+        customerKycReq[customerName].bank = msg.sender;
 
         return 1;
     }
@@ -162,6 +170,8 @@ contract Kyc {
         customers[customerName].rating =
             (customers[customerName].upVotes * 100) /
             bankList.length;
+
+        customerVerificationList.push(customerName);
 
         // Remove KYC request once the customer is added to the lsit
         removeKycRequest(customerName, customerDataHash);
@@ -251,6 +261,114 @@ contract Kyc {
         returns (bytes32)
     {
         return customers[customerName].dataHash;
+    }
+
+    function viewCustomerDetails(bytes32 customerName)
+        public
+        view
+        isBankValid
+        returns (
+            bytes32,
+            address,
+            bytes32,
+            bool
+        )
+    {
+        bytes32 customerDataHash = customerKycReq[customerName].dataHash;
+        return (
+            kycRequests[customerDataHash].userName,
+            kycRequests[customerDataHash].bank,
+            kycRequests[customerDataHash].dataHash,
+            kycRequests[customerDataHash].isAllowed
+        );
+    }
+
+    function viewPedingCustomerDetails(bytes32 customerName)
+        public
+        view
+        isBankValid
+        returns (
+            bytes32,
+            bytes32,
+            uint256,
+            uint8,
+            address,
+            bool
+        )
+    {
+        if (customers[customerName].rating > minRating) {
+            return (
+                customers[customerName].userName,
+                customers[customerName].dataHash,
+                customers[customerName].rating,
+                customers[customerName].upVotes,
+                customers[customerName].bank,
+                true
+            );
+        } else {
+            return (
+                customers[customerName].userName,
+                customers[customerName].dataHash,
+                customers[customerName].rating,
+                customers[customerName].upVotes,
+                customers[customerName].bank,
+                false
+            );
+        }
+    }
+
+    // Get all the bank's customers who have raised the kyc requests
+    function getRequestedCustomers(address bankAddress)
+        public
+        view
+        isBankValid
+        returns (bytes32[] memory)
+    {
+        bytes32[] memory customerList = new bytes32[](
+            customerReqDataList.length
+        );
+        uint8 count = 0;
+
+        // Get all the dataHash of the customer for which bank has raised a request
+        for (uint256 i = 0; i < customerReqDataList.length; i++) {
+            if (kycRequests[customerReqDataList[i]].bank == bankAddress) {
+                customerList[count] = kycRequests[customerReqDataList[i]]
+                    .userName;
+                count = count + 1;
+            }
+        }
+        return customerList;
+    }
+
+    // get all the verification requests of customer raised by a bank
+    function getPendingCustomers()
+        public
+        view
+        isBankValid
+        returns (bytes32[] memory)
+    {
+        bytes32[] memory customerList = new bytes32[](
+            customerVerificationList.length
+        );
+        uint8 count = 0;
+
+        // Get all the dataHash of the customer for which bank has raised a request
+        for (uint256 i = 0; i < customerVerificationList.length; i++) {
+            // if (customers[customerVerificationList[i]].bank == bankAddress) {
+            customerList[count] = customers[customerVerificationList[i]]
+                .userName;
+            count = count + 1;
+            // }
+        }
+        return customerList;
+    }
+
+    function getVerifiedCustomers() public view returns (bytes32[] memory) {
+        return finalCustomers;
+    }
+
+    function getAllBanks() public view returns (address[] memory) {
+        return bankList;
     }
 
     /*
@@ -369,6 +487,7 @@ contract Kyc {
         for (uint256 i = 0; i < customerReqDataList.length; i++) {
             if (kycRequests[customerReqDataList[i]].bank == bankAddress) {
                 dataList[count] = customerReqDataList[i];
+                count = count + 1;
             }
         }
         return dataList;
@@ -399,7 +518,7 @@ contract Kyc {
             if (bankToBankVotes[msg.sender][i] == bankAddress) {
                 emit alreadyVoted(
                     msg.sender,
-                    "Bank has already voted for given bank"
+                    "Bank has already voted for the given bank"
                 );
                 return 0;
             }
@@ -499,7 +618,6 @@ contract Kyc {
     function getBankDetails(address bankAddress)
         public
         view
-        isBankValid
         returns (
             bytes32,
             address,
