@@ -163,74 +163,82 @@ class Customer extends Component {
 
   render() {
     return (
-      <div>
-        <Header heading="Customer" />
-        <div className="component-body-container">
-          <h2>Add Customer KYC Request</h2>
-          <div className="component-sub-cointainer">
-            <form className="function-form" onSubmit={this.onKycRequestSubmit}>
-              <label htmlFor="pvtKey" className="label-control">Customer Id: </label><br />
-              <input id="customerId" type="text" className="input-control" name="customerId" onChange={this.inputChangedHandler} /><br /><br />
-              <label htmlFor="pvtKey" className="label-control">Data Hash: </label><br />
-              <input id="customerDataHash" type="text" className="input-control" name="customerDataHash" onChange={this.inputChangedHandler} /><br /><br />
+      <div class="container left">
 
+        <div class="row">
+          <div class="container left" style={{ padding: "30px 0px 0px 30px" }}>
+            <h5 style={{ padding: "10px 0px 0px 10px" }}>Add Customer KYC Request</h5>
+
+            <form class="col s5" onSubmit={this.onKycRequestSubmit}>
+              <input placeholder="Customer Id" id="customerId" type="text" className="input-control" name="customerId" onChange={this.inputChangedHandler} /><br /><br />
+              <input placeholder="Data Hash" id="customerDataHash" type="text" className="input-control" name="customerDataHash" onChange={this.inputChangedHandler} /><br /><br />
               <button type="submit" className="custom-btn login-btn">Add Customer</button>
-              {/* <pre>{this.state.addBankReceipt}</pre> */}
             </form>
+
           </div>
         </div>
 
         {/* Requests table */}
-        <div className="table">
-          <h2>My Requests</h2>
-          {/* {this.renderBankRequests()} */}
-          <table id='requests'>
-            <tbody>
-              <tr>
-                <th key='customerId'>CustomerId</th>
-                <th key='bank'>Requested Bank</th>
-                <th key='dataHash'>dataHash</th>
-                <th key='addCustomer'>addCustomer</th>
-              </tr>
-              {this.state.requestTable}
-            </tbody>
-          </table>
+        <div class="row">
+          <div class="container left" style={{ padding: "30px 0px 0px 30px" }}>
+            <h5 >My Requests</h5>
+            {/* {this.renderBankRequests()} */}
+            <table id='requests' class="bordered highlight centered">
+              <thead>
+                <tr>
+                  <th key='customerId'>Customer Id</th>
+                  <th key='bank'>Requested_Bank</th>
+                  <th key='dataHash'>Data Hash</th>
+                  <th key='addCustomer'>Raise_Verification_Request</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.requestTable}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Pending Verification table */}
-        <div className="table">
-          <h2>Pending Verification</h2>
-          {/* {this.renderBankRequests()} */}
-          <table id='requests'>
-            <tbody>
-              <tr>
-                <th key='CustomerId'>CustomerId</th>
-                <th key='bank'>Bank</th>
-                <th key='rating'>Rating</th>
-                <th key='upVotes'>UpVotes</th>
-                <th key='Vote'>Approve</th>
-              </tr>
-              {this.state.verificationTable}
-            </tbody>
-          </table>
+        <div class="row">
+          <div class="container left" style={{ padding: "30px 0px 0px 30px" }}>
+            <h5>Pending Verification</h5>
+            <table id='requests' class="bordered highlight centered">
+              <thead>
+                <tr>
+                  <th key='CustomerId'>CustomerId</th>
+                  <th key='bank'>Requested_Bank</th>
+                  <th key='rating'>Rating</th>
+                  <th key='upVotes'>UpVotes</th>
+                  <th key='Vote'>Approve</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.verificationTable}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Accepted Customers table */}
-        <div className="table">
-          <h2>Verified Customers</h2>
-          {/* {this.renderBankRequests()} */}
-          <table id='requests'>
-            <tbody>
-              <tr>
-                <th key='CustomerId'>CustomerId</th>
-                <th key='rating'>Rating</th>
-                <th key='upVotes'>UpVotes</th>
-              </tr>
-              {this.state.verifiedTable}
-            </tbody>
-          </table>
+        <div class="row">
+          <div class="container left" style={{ padding: "30px 0px 0px 30px" }}>
+            <h5>Verified Customers</h5>
+            <table id='requests' class="bordered highlight centered">
+              <thead>
+                <tr>
+                  <th key='CustomerId'>CustomerId</th>
+                  <th key='rating'>Rating</th>
+                  <th key='upVotes'>UpVotes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.verifiedTable}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      </div >
     )
   }
 }

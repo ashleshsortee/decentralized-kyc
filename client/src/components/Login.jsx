@@ -94,9 +94,12 @@ class Login extends Component {
   render() {
     const { loading } = this.state;
     return (
-      <div>
-        Login<br /><br />
-        <input type="button" value={loading ? 'Loading...' : 'MetaMask Login'} onClick={this.handleLogin} disabled={loading} /><br />
+      <div class="container center">
+        <div class="row">
+          <div class="container left"></div>
+          <h4 style={{ padding: "100px 0px 50px 0px" }}>Login Using Metamask</h4>
+          <input class="test" type="button" value={loading ? 'Loading...' : 'MetaMask Login'} onClick={this.handleLogin} disabled={loading} />
+        </div>
       </div>
     );
   }

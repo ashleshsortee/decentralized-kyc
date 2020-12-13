@@ -37,32 +37,35 @@ class KYC extends Component {
   render() {
     return (
       <Router>
-        <div>
+
+        <div >
+
           <ReactNotification />
-          <nav>
-            <ul>
-              {!this.state.currentUser && <li>
-                <Link to="/login">Login</Link>
-              </li>}
-              {this.state.currentUser &&
-                <div>
-                  {this.state.isAdmin && <li>
-                    <Link to="/admin">Admin</Link>
-                  </li>}
-                  <li>
-                    <Link to="/bank">Bank</Link>
-                  </li>
-                  <li>
-                    <Link to="/customer">Customer</Link>
-                  </li>
-                  <li>
-                    <div>
-                      <input type="button" value='Logout' onClick={this.handleLogout} /><br />
-                    </div>
-                  </li>
-                </div>
-              }
-            </ul>
+          <nav style={{ padding: '0px 30px 0px 30px' }}>
+            <div class="nav-wrapper" >
+              <a href="#" class="brand-logo left">KYC DAPP</a>
+              <ul class="right hide-on-med-and-down 10" >
+                {
+                  !this.state.currentUser &&
+                  <li><Link to="/login">Login</Link></li>
+                }
+                {this.state.currentUser &&
+                  <div>
+                    {
+                      this.state.isAdmin &&
+                      <li> <Link to="/admin">Admin</Link> </li>
+                    }
+                    <li> <Link to="/bank">Bank</Link></li>
+                    <li><Link to="/customer">Customer</Link></li>
+                    <li >
+                      <div >
+                        <input class="test" type="button" value='Logout' onClick={this.handleLogout} /><br />
+                      </div>
+                    </li>
+                  </div>
+                }
+              </ul>
+            </div>
           </nav>
 
           <Switch>

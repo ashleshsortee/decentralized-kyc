@@ -39,7 +39,7 @@ class Customer extends Component {
         <td>{rating}</td>
         <td>{kycCount}</td>
         <td>{regNumber}</td>
-        <td><button type="submit" className="custom-btn login-btn" onClick={this.onVerifyClick.bind(this, address)}>Verify</button></td>
+        <td><button type="submit" className="custom-btn login-btn" onClick={this.onVerifyClick.bind(this, address)}>Upvote</button></td>
       </tr>)
     });
 
@@ -49,24 +49,26 @@ class Customer extends Component {
 
   render() {
     return (
-      <div>
-        <Header heading="Bank" />
-        {/* Bank table */}
-        <div className="table">
-          <h2>All Banks</h2>
-          <table id='requests'>
-            <tbody>
-              <tr>
-                <th key='name'>Name</th>
-                <th key='address'>Address</th>
-                <th key='rating'>Rating</th>
-                <th key='kycCount'>KycCount</th>
-                <th key='regNumber'>Registration Number</th>
-                <th key='upVote'>Upvote Bank</th>
-              </tr>
-              {this.state.bankTable}
-            </tbody>
-          </table>
+      <div class="container center">
+        <div class="row">
+          <div class="container left">
+            <h4 style={{ padding: "30px 0px 50px 300px" }}>Bank Details</h4>
+            <table id='requests' class="bordered highlight centered" >
+              <thead>
+                <tr>
+                  <th key='name'>Name</th>
+                  <th key='address'>Address</th>
+                  <th key='rating'>Rating</th>
+                  <th key='kycCount'>KycCount</th>
+                  <th key='regNumber'>Registration Number</th>
+                  <th key='upVote'>Upvote</th>
+                </tr>
+              </thead>
+              <tbody class="striped">
+                {this.state.bankTable}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     )

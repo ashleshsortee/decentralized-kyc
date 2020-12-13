@@ -53,35 +53,34 @@ class Admin extends Component {
 
   render() {
     return (
-      <div>
-        <Header heading="BANK" />
-        <div className="component-body-container">
-          <h2>Add Bank</h2>
-          <div className="component-sub-cointainer">
-            <form className="function-form" onSubmit={this.onAddBankSumbitted}>
-              <label htmlFor="pvtKey" className="label-control">Bank Name: </label><br />
-              <input id="bankName" type="text" className="input-control" name="bankName" onChange={this.inputChangedHandler} /><br /><br />
-              <label htmlFor="pvtKey" className="label-control">Bank Address: </label><br />
-              <input id="bankAddress" type="text" className="input-control" name="bankAddress" onChange={this.inputChangedHandler} /><br /><br />
-              <label htmlFor="pvtKey" className="label-control">Registration Number: </label><br />
-              <input id="regNumber" type="text" className="input-control" name="regNumber" onChange={this.inputChangedHandler} /><br /><br />
 
+      <div class="container left">
+
+        <div class="row">
+          <div class="container left">
+            <h5 style={{ padding: "30px 0px 0px 10px" }}>Add Bank</h5>
+            <form class="col s5" onSubmit={this.onAddBankSumbitted}>
+              <input id="bankName" placeholder="Bank Name" type="text" class="validate" name="bankName" onChange={this.inputChangedHandler} /><br /><br />
+              <input id="bankAddress" placeholder="Bank Address" type="text" className="input-control" name="bankAddress" onChange={this.inputChangedHandler} /><br /><br />
+              <input id="regNumber" placeholder="Registration Number" type="text" className="input-control" name="regNumber" onChange={this.inputChangedHandler} /><br /><br />
 
               <button type="submit" className="custom-btn login-btn">Add Bank</button>
             </form>
           </div>
+        </div>
 
-          <div className="component-sub-cointainer">
-            <h2>Remove Bank</h2>
-            <form className="function-form" onSubmit={this.onRemoveBankSumbitted}>
-              <label htmlFor="pvtKey" className="label-control">Bank Address: </label><br />
-              <input id="bankName" type="text" className="input-control" name="bankAddress" onChange={this.inputChangedHandler} /><br /><br />
+        <div class="row">
+          <div class="container left">
+            <h5 style={{ padding: "30px 0px 0px 10px" }}>Remove Bank</h5>
+            <form class="col s5" onSubmit={this.onRemoveBankSumbitted}>
+              <input id="bankName" placeholder="Bank Address" type="text" className="input-control" name="bankAddress" onChange={this.inputChangedHandler} /><br /><br />
 
               <button type="submit" className="custom-btn login-btn">Remove Bank</button>
             </form>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
+
     )
   }
 }
